@@ -33,9 +33,8 @@ do
   type $cmd >&2 || exit 1
 done
 
-a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; BINDIR=$(cd "$a" || exit; pwd)
-# shellcheck source=include/global.inc.sh
-. "$BINDIR/include/global.inc.sh"
+a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; BINDIR=$(cd $a; pwd)
+. $BINDIR/include/global.inc.sh
 
 DOMAIN=${1:-'spf-tools.eu.org'}
 APIURL="https://api.cloudflare.com/client/v4"
@@ -45,7 +44,7 @@ apicmd() {
   test -n "$1" && shift
   REST=${1:-'/zones'}
   test -n "$1" && shift
-  curl -X "$CMD" "${APIURL}${REST}" \
+  curl -X $CMD ${APIURL}${REST} \
     -s \
     -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type:application/json" \
@@ -53,8 +52,7 @@ apicmd() {
 }
 
 # Read TOKEN
-# shellcheck source=/dev/null
-test -r "$SPFTRC" && . "$SPFTRC"
+test -r $SPFTRC && . $SPFTRC
 
 test -n "$TOKEN" || { echo "TOKEN not set! Exiting." >&2; exit 1; }
 
@@ -65,39 +63,38 @@ test "$1" = "verify" && {
 
 idsfile=$(mktemp /tmp/cloudflare-ids-XXXXXX)
 zonefile=$(mktemp /tmp/cloudflare-zone-XXXX)
-cat > "$zonefile"
-trap 'rm -f "$idsfile" "$zonefile" "$zonefile-data"' EXIT
+cat > $zonefile
+trap "rm -f $idsfile $zonefile $zonefile-data" EXIT
 
 DOMAIN_ID=$(apicmd GET /zones | jq -r '.result | .[] | .name + ":" + .id' \
-            | grep "$DOMAIN") \
+            | grep $DOMAIN) \
   || exit 1
-DOMAIN_ID=$(echo "$DOMAIN_ID" | cut -d: -f2)
+DOMAIN_ID=$(echo $DOMAIN_ID | cut -d: -f2)
 
 # only edit existing TXT records containig the "v=spf1" marker
 apicmd GET "/zones/$DOMAIN_ID/dns_records?type=TXT" \
-  | jq -r '.result | .[] | select ( .content | contains("v=spf1") ) | .name + ":" + .id' > "$idsfile"
+  | jq -r '.result | .[] | select ( .content | contains("v=spf1") ) | .name + ":" + .id' > $idsfile
 
-while read -r line
+while read line
 do
-  name=$(echo "$line" | cut -d^ -f1)
-  content=$(echo "$line" | cut -d^ -f2 | tr -d \")
-  id_to_change=$(grep "^$name" "$idsfile" | cut -d: -f2)
+  name=$(echo $line | cut -d^ -f1)
+  content=$(echo $line | cut -d^ -f2 | tr -d \")
+  id_to_change=$(grep "^$name" $idsfile | cut -d: -f2)
 
-    cat > "$zonefile-data" <<EOF
+    cat > $zonefile-data <<EOF
 {"type":"TXT","name":"$name","content":"$content"}
 EOF
 
   if test -z "$id_to_change" 
   then
-        printf "Creating TXT record %s... " "$name"
+        echo -n "Creating TXT record $name... "
         apicmd PUT "/zones/$DOMAIN_ID/dns_records" \
           --data "@${zonefile}-data" | jq .success | grep -q true \
           && echo OK || echo error
   else
-        printf "Updating TXT record %s with id %s... " \
-          "$name" "$id_to_change"
+        echo -n "Updating TXT record $name with id $id_to_change... "
         apicmd PUT "/zones/$DOMAIN_ID/dns_records/$id_to_change" \
           --data "@${zonefile}-data" | jq .success | grep -q true \
           && echo OK || echo error
   fi
-done < "$zonefile"
+done < $zonefile

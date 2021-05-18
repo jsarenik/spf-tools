@@ -27,18 +27,14 @@ do
   type $cmd >/dev/null
 done
 
-# shellcheck disable=2153
-test "$DOMAIN" = "" || DOMAIN_OVER=$DOMAIN
+test -n "$DOMAIN" && DOMAIN_OVER=$DOMAIN
 
-a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; BINDIR=$(cd "$a" || true; pwd)
-# shellcheck source=include/global.inc.sh
-. "$BINDIR/include/global.inc.sh"
-# shellcheck source=include/despf.inc.sh
-. "$BINDIR/include/despf.inc.sh"
+a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; BINDIR=$(cd $a; pwd)
+. $BINDIR/include/global.inc.sh
+. $BINDIR/include/despf.inc.sh
 
 # Read DNS_TIMEOUT if spf-toolsrc is present
-# shellcheck source=/dev/null
-test -r "$SPFTRC" && . "$SPFTRC"
+test -r $SPFTRC && . $SPFTRC
 
 usage() {
     cat <<-EOF
@@ -76,8 +72,8 @@ shift $((OPTIND-1))
 test -z "$*" || domain="$*"
 
 loopfile=$(mktemp /tmp/despf-loop-XXXXXXX)
-echo random-non-match-tdaoeinthaonetuhanotehu > "$loopfile"
-trap 'cleanup "$loopfile"; exit 1;' INT QUIT
+echo random-non-match-tdaoeinthaonetuhanotehu > $loopfile
+trap "cleanup $loopfile; exit 1;" INT QUIT
 
-despfit "$domain" "$loopfile" | grep . || { cleanup "$loopfile"; exit 1; }
-cleanup "$loopfile"
+despfit "$domain" $loopfile | grep . || { cleanup $loopfile; exit 1; }
+cleanup $loopfile

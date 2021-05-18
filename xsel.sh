@@ -34,5 +34,5 @@ do
   output=$(echo $line | cut -d^ -f2)
   test -n "$cap" && echo $output | tr -d '\n"' | eval $cap || echo $output
   echo '  Press ENTER to continue...'
-  read -r </dev/tty
+  read enter </dev/tty
 done

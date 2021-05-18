@@ -22,7 +22,7 @@ test -n "$DEBUG" && set -x
 ORIGDOMAIN=${1:-'spf-orig.spf-tools.eu.org'}
 DOMAIN=${1:-'spf-tools.eu.org'}
 
-a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; BINDIR=$(cd "$a" || exit; pwd)
+a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; BINDIR=$(cd $a; pwd)
 PATH=$BINDIR:$PATH
 
-despf.sh "$ORIGDOMAIN" | simplify.sh | mkblocks.sh "$DOMAIN" spf | mkzoneent.sh
+despf.sh $ORIGDOMAIN | simplify.sh | mkblocks.sh $DOMAIN spf | mkzoneent.sh

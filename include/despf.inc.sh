@@ -1,4 +1,3 @@
-#!/bin/sh
 ##############################################################################
 #
 # Copyright 2015 spf-tools team (see AUTHORS)
@@ -20,7 +19,7 @@
 DNS_TIMEOUT=${DNS_TIMEOUT:-"2"}
 
 myhost() {
-  host -W "$DNS_TIMEOUT" "$@" || { host -W "$DNS_TIMEOUT" "$@" 1>&2; exit 1; }
+  host -W $DNS_TIMEOUT "$@" || { host -W $DNS_TIMEOUT "$@" 1>&2; exit 1; }
 }
 
 get_txt() {
@@ -46,11 +45,11 @@ findns() {
   while test -z "$ns"
   do
     if
-      ns=$(get_ns "$dd" | grep .)
+      ns=$(get_ns $dd | grep .)
     then
       break
     else
-      echo "$dd" | grep -q '\.' && { dd="${dd#*.}"; unset ns; } || break
+      echo $dd | grep -q '\.' && { dd="${dd#*.}"; unset ns; } || break
     fi
   done
   echo "$ns" | grep '^[^;]'
