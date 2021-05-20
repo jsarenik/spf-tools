@@ -7,11 +7,6 @@
 
 # SPF-tools
 
-[![CircleCI badge][circle-img]][circle]
-[![Codeship badge][codeship-img]][codeship]
-[![Travis-CI badge][travis-img]][travis]
-[![SemaphoreCI badge][semaphore-img]][semaphore]
-
 [![Join the chat at https://gitter.im/spf-tools/spf-tools][gitter-img]][gitter]
 
 Simple tools for keeping the SPF TXT records tidy in order to fight
@@ -278,14 +273,5 @@ spread the word: Free domains: http://www.eu.org/
     limitations under the License.
 
 
-[circle-img]: https://circleci.com/gh/spf-tools/spf-tools/tree/master.png?circle-token=76b5be548795219cce8df5780def8eceaa134c35 "Test status"
-[circle]: https://circleci.com/gh/spf-tools/spf-tools
-[codeship-img]: https://app.codeship.com/projects/4b5902d0-9810-0136-69ce-0e10429ce0aa/status?branch=master
-[codeship]: https://codeship.com/projects/305167
-[travis-img]: https://travis-ci.org/spf-tools/spf-tools.svg?branch=master
-[travis]: https://travis-ci.org/spf-tools/spf-tools
-[semaphore-img]: https://semaphoreci.com/api/v1/spf-tools/spf-tools/branches/master/badge.svg
-[semaphore]: https://semaphoreci.com/spf-tools/spf-tools
 [gitter-img]: https://badges.gitter.im/Join%20Chat.svg
 [gitter]: https://gitter.im/spf-tools/spf-tools
-
