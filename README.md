@@ -7,7 +7,7 @@
 
 # SPF-tools
 
-[![Join the chat at https://gitter.im/spf-tools/spf-tools][gitter-img]][gitter]
+[![Join the chat at https://gitter.im/jsarenik/spf-tools][gitter-img]][gitter]
 
 Simple tools for keeping the SPF TXT records tidy in order to fight
 [10 maximum DNS look-ups](http://serverfault.com/questions/584708).
@@ -274,4 +274,4 @@ spread the word: Free domains: http://www.eu.org/
 
 
 [gitter-img]: https://badges.gitter.im/Join%20Chat.svg
-[gitter]: https://gitter.im/spf-tools/spf-tools
+[gitter]: https://gitter.im/jsarenik/spf-tools
